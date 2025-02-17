@@ -5,8 +5,17 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const cors = require('cors');
 
+var json = {
+    'title': 'test json response',
+    'message': 'this is a message',
+    'time': 'now'
+}
+
+
+
 // Initialize the Express application
 const app = express();
+
 
 // Apply middleware
 app.use(cors()); // Enable Cross-Origin Resource Sharing
@@ -78,12 +87,16 @@ app.post('/analyze-url', async (req, res) => {
     }
 });
 
+app.get('/test', function (req, res) {
+    res.json(json);
+})
+
 // Default route
 app.get('/', (req, res) => {
     res.send("This is the server API page. You may access its services via the client app.");
 });
 
 // Start the server
-app.listen(8000, () => {
-    console.log('Server running on port 8000');
-});
+app.listen(8081, function () {
+    console.log('Example app listening on port 8081!')
+})
