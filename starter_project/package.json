@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "node src/server/index.js",
+    "start": "nodemon src/server/index.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-dev": "webpack-dev-server  --config webpack.dev.js --open"
   },
@@ -24,11 +24,11 @@
     "express": "^4.21.2",
     "html-webpack-plugin": "^5.6.0",
     "node-fetch": "^3.3.2",
+    "nodemon": "^3.1.9",
     "style-loader": "^3.3.4",
     "undici": "5.11.0",
     "webpack-cli": "^5.1.4"
   },
-
   "overrides": {
     "undici": "5.11.0"
   },
