@@ -1,10 +1,6 @@
-import { checkURL } from './urlChecker'
-
 const serverURL = 'http://localhost:8081/api'
 
 const form = document.getElementById('urlForm');
-
-// form.addEventListener('submit', handleSubmit);
 
 function handleSubmit(event) {
     event.preventDefault();
@@ -51,11 +47,8 @@ function handleSubmit(event) {
                 console.error('Error:', error);
             });
     }
-
-
 }
 
 form.addEventListener('submit', handleSubmit);
-
 
 export { handleSubmit }
