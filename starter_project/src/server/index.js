@@ -2,8 +2,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const cheerio = require('cheerio');
 const cors = require('cors');
+const puppeteer = require('puppeteer');
+const cheerio = require('cheerio');
 
 var json = {
     'title': 'test json response',
@@ -22,35 +23,22 @@ app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(bodyParser.json()); // Parse JSON request bodies
 
 // Encapsulated function to scrape text from a URL
-async function scrapeTextFromURL(url) {
-    try {
-        console.log(`Fetching and scraping text from URL: ${url}`);
+async function scrapeWithPuppeteer(url) {
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-        // Fetch the webpage data
-        const { data } = await axios.get(url);
+    await page.goto(url, { waitUntil: 'networkidle2' });
 
-        // Use Cheerio to load the HTML and extract the text
-        const $ = cheerio.load(data);
-        const text = $('body').text().trim();
-
-        // Check if text content exists
-        if (!text) {
-            console.error('No text content found at the provided URL');
-            return null;
-        }
-
-        // Extract and return the first 200 characters of the text
-        const trimmedText = text.slice(0, 200);
-        console.log(`Extracted Text (200 characters):\n${trimmedText}\n--- End of Text Preview ---`);
-        return trimmedText;
-    } catch (error) {
-        console.error('Error while scraping text from the URL:', error.message);
-        throw new Error('Failed to scrape text from the URL');
-    }
+    const text = await page.evaluate(() => document.body.innerText.trim());
+    await browser.close();
+    
+    return text.slice(0, 200);
 }
 
 // Route to analyze text from a URL
-app.post('/analyze-url', async (req, res) => {
+app.post('/api', async (req, res) => {
     const { url } = req.body;
 
     // Validate the input URL
@@ -61,7 +49,7 @@ app.post('/analyze-url', async (req, res) => {
 
     try {
         // Step 1: Scrape text from the provided URL
-        const text = await scrapeTextFromURL(url);
+        const text = await scrapeWithPuppeteer(url);
 
         if (!text) {
             return res.status(400).json({ error: 'No text content found at the provided URL' });
@@ -73,14 +61,13 @@ app.post('/analyze-url', async (req, res) => {
         // The endpoint URL is: https://kooye7u703.execute-api.us-east-1.amazonaws.com/NLPAnalyzer
         // Send the `text` as part of the request body.
 
-        /*
-        Example Code:
-        const response = await axios.post('https://kooye7u703.execute-api.us-east-1.amazonaws.com/NLPAnalyzer', { text });
+
+        const response = await axios.post('https://kooye7u703.execute-api.us-east-1.amazonaws.com/NLPAnalyzer', { text: text });
         return res.json(response.data); // Send the NLP results back to the client
-        */
+        
 
         // Placeholder response for learners to complete
-        return res.json({ message: 'NLP analysis result will be here. Complete the API call above!' });
+        // return res.json({ message: 'NLP analysis result will be here. Complete the API call above!' });
     } catch (error) {
         console.error('Error during URL processing or API request:', error.message);
         return res.status(500).json({ error: 'Failed to analyze the URL' });
