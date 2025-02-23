@@ -2,6 +2,7 @@
   "name": "example-project",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "jest",
     "start": "nodemon src/server/index.js",

@@ -10,6 +10,11 @@ module.exports = {
         libraryTarget: 'var',
         library: 'Client'
     },
+    transform: {
+        "^.+\\.js$": "babel-jest"
+    },
+    moduleFileExtensions: ["js", "json", "node"],
+    testEnvironment: 'jsdom',
     module: {
         rules: [
             {
@@ -19,7 +24,7 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+                use: ['style-loader', 'css-loader', 'sass-loader']
             }
         ]
     },

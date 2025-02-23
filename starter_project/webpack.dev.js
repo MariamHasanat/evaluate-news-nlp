@@ -12,6 +12,11 @@ module.exports = {
     mode: 'development',
     devtool: 'source-map',
     stats: 'verbose',
+    transform: {
+        "^.+\\.js$": "babel-jest"
+    },
+    moduleFileExtensions: ["js", "json", "node"],
+    testEnvironment: 'jsdom',
     module: {
         rules: [
             {
@@ -21,8 +26,8 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: [ 'style-loader', 'css-loader', 'sass-loader' ]
-        }
+                use: ['style-loader', 'css-loader', 'sass-loader']
+            }
         ]
     },
     plugins: [
@@ -43,6 +48,6 @@ module.exports = {
     devServer: {
         port: 3000,
         allowedHosts: 'all',
-        historyApiFallback: true, 
+        historyApiFallback: true,
     }
 }
